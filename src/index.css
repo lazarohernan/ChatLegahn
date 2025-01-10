@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out forwards;
+}
+
+/* DatePicker Dark Mode Styles */
+.react-datepicker {
+  @apply bg-gray-800 border-gray-700 text-white !important;
+}
+
+.react-datepicker__header {
+  @apply bg-gray-900 border-gray-700 !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  @apply text-white !important;
+}
+
+.react-datepicker__day {
+  @apply text-white hover:bg-gray-700 !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-blue-500 hover:bg-blue-600 text-white !important;
+}
+
+.react-datepicker__day--disabled {
+  @apply text-gray-500 hover:bg-transparent !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply border-gray-400 !important;
+}
+
+.react-datepicker__triangle::before,
+.react-datepicker__triangle::after {
+  @apply border-gray-700 !important;
+}
+
+/* DatePicker Z-Index */
+.react-datepicker-popper {
+  @apply z-[9999] !important;
+}
+
+/* DatePicker Light Mode Styles */
+:root:not(.dark) .react-datepicker {
+  @apply bg-white border-gray-200 text-gray-900 !important;
+}
+
+:root:not(.dark) .react-datepicker__header {
+  @apply bg-gray-50 border-gray-200 !important;
+}
+
+:root:not(.dark) .react-datepicker__current-month,
+:root:not(.dark) .react-datepicker__day-name {
+  @apply text-gray-900 !important;
+}
+
+:root:not(.dark) .react-datepicker__day {
+  @apply text-gray-900 hover:bg-gray-100 !important;
+}
+
+:root:not(.dark) .react-datepicker__day--selected,
+:root:not(.dark) .react-datepicker__day--keyboard-selected {
+  @apply bg-blue-500 hover:bg-blue-600 text-white !important;
+}
+
+:root:not(.dark) .react-datepicker__day--disabled {
+  @apply text-gray-400 hover:bg-transparent !important;
+}
+
+:root:not(.dark) .react-datepicker__navigation-icon::before {
+  @apply border-gray-600 !important;
+}
+
+:root:not(.dark) .react-datepicker__triangle::before,
+:root:not(.dark) .react-datepicker__triangle::after {
+  @apply border-gray-200 !important;
+}

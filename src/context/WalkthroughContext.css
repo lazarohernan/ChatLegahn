@@ -1,0 +1,205 @@
+/* Estilos personalizados para Intro.js */
+.introjs-tooltip {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  max-width: 350px !important;
+  min-width: 250px !important;
+  padding: 0 !important;
+  position: relative !important;
+}
+
+.introjs-tooltip.dark {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.introjs-tooltiptext {
+  padding: 20px !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.introjs-tooltipbuttons {
+  padding: 16px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+.dark .introjs-tooltipbuttons {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.introjs-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+  background: none !important;
+  border: none !important;
+  text-shadow: none !important;
+  line-height: 1 !important;
+  min-width: fit-content !important;
+}
+
+.introjs-skipbutton {
+  color: #6b7280 !important;
+  font-weight: normal !important;
+  position: absolute !important;
+  left: 16px !important;
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+  transition: color 0.2s !important;
+  background: none !important;
+}
+
+.dark .introjs-skipbutton {
+  color: #9ca3af !important;
+}
+
+.introjs-skipbutton:hover {
+  color: #4b5563 !important;
+}
+
+.dark .introjs-skipbutton:hover {
+  color: #e5e7eb !important;
+}
+
+.introjs-prevbutton {
+  color: #374151 !important;
+  background: #f3f4f6 !important;
+  margin-left: auto !important;
+}
+
+.dark .introjs-prevbutton {
+  color: #e5e7eb !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.introjs-prevbutton:hover {
+  background: #e5e7eb !important;
+}
+
+.dark .introjs-prevbutton:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.introjs-nextbutton {
+  color: #ffffff !important;
+  background: #3b82f6 !important;
+}
+
+.introjs-nextbutton:hover {
+  background: #2563eb !important;
+}
+
+.introjs-bullets {
+  padding: 0 20px 16px !important;
+}
+
+.introjs-bullets ul li a {
+  width: 6px !important;
+  height: 6px !important;
+  background: #d1d5db !important;
+  border: none !important;
+  margin: 0 4px !important;
+}
+
+.dark .introjs-bullets ul li a {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.introjs-bullets ul li a.active {
+  background: #3b82f6 !important;
+}
+
+.introjs-progress {
+  background: #f3f4f6 !important;
+  height: 2px !important;
+  margin: 0 20px 16px !important;
+}
+
+.dark .introjs-progress {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.introjs-progressbar {
+  background: #3b82f6 !important;
+}
+
+.introjs-arrow {
+  border-color: #ffffff !important;
+}
+
+.dark .introjs-arrow {
+  border-color: #1f2937 !important;
+}
+
+.introjs-arrow.top, .introjs-arrow.top-middle, .introjs-arrow.top-right {
+  border-bottom-color: #ffffff !important;
+}
+
+.dark .introjs-arrow.top, 
+.dark .introjs-arrow.top-middle, 
+.dark .introjs-arrow.top-right {
+  border-bottom-color: #1f2937 !important;
+}
+
+.introjs-arrow.right, .introjs-arrow.right-bottom {
+  border-left-color: #ffffff !important;
+}
+
+.dark .introjs-arrow.right,
+.dark .introjs-arrow.right-bottom {
+  border-left-color: #1f2937 !important;
+}
+
+.introjs-arrow.bottom, .introjs-arrow.bottom-middle, .introjs-arrow.bottom-right {
+  border-top-color: #ffffff !important;
+}
+
+.dark .introjs-arrow.bottom,
+.dark .introjs-arrow.bottom-middle,
+.dark .introjs-arrow.bottom-right {
+  border-top-color: #1f2937 !important;
+}
+
+.introjs-arrow.left, .introjs-arrow.left-bottom {
+  border-right-color: #ffffff !important;
+}
+
+.dark .introjs-arrow.left,
+.dark .introjs-arrow.left-bottom {
+  border-right-color: #1f2937 !important;
+}
+
+.introjs-helperLayer {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: rgb(33 33 33 / 20%) 0px 0px 1px 2px, rgb(33 33 33 / 20%) 0px 0px 0px 5000px !important;
+}
+
+.dark .introjs-helperLayer {
+  box-shadow: rgb(0 0 0 / 30%) 0px 0px 1px 2px, rgb(0 0 0 / 30%) 0px 0px 0px 5000px !important;
+}
+
+.introjs-overlay {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.dark .introjs-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
