@@ -50,9 +50,28 @@ const Register = () => {
         email: values.email,
         password: values.password
       });
-      navigate('/dashboard');
+      
+      // Mostrar mensaje de éxito y redirigir a confirmación
+      showError('Se ha enviado un correo de confirmación. Por favor, verifica tu bandeja de entrada.', 'success');
+      navigate('/login', { 
+        state: { 
+          message: 'Por favor, verifica tu correo electrónico para completar el registro.' 
+        }
+      });
     } catch (error) {
       console.error('Register error:', error);
+      let errorMessage = 'Error al crear la cuenta';
+      
+      // Manejar errores específicos de Supabase
+      if (error.message.includes('Email already registered')) {
+        errorMessage = 'Este correo electrónico ya está registrado';
+      } else if (error.message.includes('Password should be')) {
+        errorMessage = 'La contraseña debe tener al menos 8 caracteres';
+      } else if (error.message.includes('Invalid email')) {
+        errorMessage = 'El correo electrónico no es válido';
+      }
+      
+      showError(errorMessage, 'error');
     } finally {
       setLoading(false);
     }

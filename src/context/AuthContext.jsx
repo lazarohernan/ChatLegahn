@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { logService } from '../services/logService';
 import { sessionService } from '../services/sessionService';
+import supabaseService from '../services/supabaseService';
 
 export const AuthContext = createContext(null);
 
@@ -14,15 +15,13 @@ export const AuthProvider = ({ children }) => {
   const initAuth = useCallback(async () => {
     try {
       logService.debug('Iniciando autenticación...');
-      const isValid = sessionService.isSessionValid();
+      const session = await supabaseService.getSession();
       
-      if (isValid) {
-        const session = sessionService.getSession();
-        if (session?.user) {
-          setUser(session.user);
-          setIsAuthenticated(true);
-          logService.debug('Sesión restaurada para usuario:', session.user.id);
-        }
+      if (session) {
+        setUser(session.user);
+        setIsAuthenticated(true);
+        logService.debug('Sesión restaurada para usuario:', session.user.id);
+        await sessionService.setSession(session);
       } else {
         logService.debug('No hay sesión válida');
         await sessionService.clearSession();
@@ -43,45 +42,121 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, [initAuth]);
 
-  // Efecto para manejar la extensión de sesión
+  // Efecto para manejar cambios en el estado de autenticación
   useEffect(() => {
-    if (!isAuthenticated) return;
-
-    logService.debug('Configurando extensión de sesión');
-    
-    const handleActivity = async () => {
-      try {
-        if (typeof sessionService.extendSession === 'function') {
-          await sessionService.extendSession();
-          logService.debug('Sesión extendida por actividad');
-        } else {
-          logService.error('extendSession no está definido en sessionService');
-        }
-      } catch (error) {
-        logService.error('Error extendiendo sesión:', error);
+    const { data: { subscription } } = supabaseService.onAuthStateChange(async (event, session) => {
+      logService.debug('Cambio en estado de autenticación:', event);
+      
+      if (event === 'SIGNED_IN') {
+        setUser(session.user);
+        setIsAuthenticated(true);
+        await sessionService.setSession(session);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setIsAuthenticated(false);
+        await sessionService.clearSession();
+      } else if (event === 'TOKEN_REFRESHED') {
+        setUser(session.user);
+        await sessionService.setSession(session);
       }
-    };
-
-    // Eventos para detectar actividad del usuario
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-    events.forEach(event => {
-      window.addEventListener(event, handleActivity);
     });
 
-    // Limpiar event listeners
     return () => {
-      events.forEach(event => {
-        window.removeEventListener(event, handleActivity);
-      });
+      subscription.unsubscribe();
     };
-  }, [isAuthenticated]);
+  }, []);
+
+  // Funciones de autenticación
+  const signIn = async (credentials) => {
+    try {
+      setIsLoading(true);
+      const data = await supabaseService.signIn(credentials);
+      setUser(data.user);
+      setIsAuthenticated(true);
+      return data;
+    } catch (error) {
+      logService.error('Error en signIn:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signUp = async (credentials) => {
+    try {
+      setIsLoading(true);
+      const data = await supabaseService.signUp(credentials);
+      return data;
+    } catch (error) {
+      logService.error('Error en signUp:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      setIsLoading(true);
+      await supabaseService.signOut();
+      setUser(null);
+      setIsAuthenticated(false);
+      await sessionService.clearSession();
+    } catch (error) {
+      logService.error('Error en signOut:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetPassword = async (email) => {
+    try {
+      setIsLoading(true);
+      await supabaseService.resetPassword(email);
+    } catch (error) {
+      logService.error('Error en resetPassword:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    try {
+      setIsLoading(true);
+      await supabaseService.updatePassword(newPassword);
+    } catch (error) {
+      logService.error('Error en updatePassword:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithProvider = async (provider) => {
+    try {
+      setIsLoading(true);
+      const data = await supabaseService.signInWithProvider(provider);
+      return data;
+    } catch (error) {
+      logService.error('Error en signInWithProvider:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const contextValue = {
     isAuthenticated,
-    setIsAuthenticated,
     user,
-    setUser,
     isLoading,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
+    updatePassword,
+    signInWithProvider,
     initAuth
   };
 

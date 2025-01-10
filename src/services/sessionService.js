@@ -1,198 +1,118 @@
 import { logService } from './logService';
-import cookieService from './cookieService';
-import authService from './authService';
+import { cookieService } from './cookieService';
+import supabaseService from './supabaseService';
 
 class SessionService {
   constructor() {
-    this.SESSION_KEY = 'app_session';
-    this.LAST_ROUTE_KEY = 'last_attempted_route';
-    this.ACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutos
-    this.activityTimer = null;
-
-    // Verificar que cookieService tenga las funciones necesarias
-    this._validateCookieService();
+    if (!cookieService) {
+      throw new Error('CookieService is required');
+    }
+    this.cookieService = cookieService;
   }
 
-  _validateCookieService() {
-    const requiredMethods = ['clearTokens', 'clearUser', 'getAccessToken', 'getRefreshToken'];
-    requiredMethods.forEach(method => {
-      if (typeof cookieService[method] !== 'function') {
-        logService.error(`CookieService no tiene el método requerido: ${method}`);
-      }
-    });
-    logService.debug('CookieService validado:', cookieService);
-  }
-
-  setSession(sessionData) {
+  async setSession(session) {
     try {
-      localStorage.setItem(this.SESSION_KEY, JSON.stringify({
-        ...sessionData,
-        timestamp: Date.now()
-      }));
-      logService.debug('Sesión guardada');
-      this.startActivityTimer();
+      logService.debug('Guardando sesión');
+      
+      if (!session) {
+        throw new Error('Session is required');
+      }
+
+      // Guardar token de acceso
+      this.cookieService.set('access_token', session.access_token, {
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      // Guardar refresh token si existe
+      if (session.refresh_token) {
+        this.cookieService.set('refresh_token', session.refresh_token, {
+          secure: true,
+          sameSite: 'strict'
+        });
+      }
+
+      // Guardar datos de usuario
+      if (session.user) {
+        this.cookieService.set('user', JSON.stringify(session.user), {
+          secure: true,
+          sameSite: 'strict'
+        });
+      }
+
+      logService.debug('Sesión guardada correctamente');
     } catch (error) {
       logService.error('Error guardando sesión:', error);
       throw error;
     }
   }
 
-  getSession() {
+  async clearSession() {
     try {
-      const sessionData = localStorage.getItem(this.SESSION_KEY);
-      return sessionData ? JSON.parse(sessionData) : null;
-    } catch (error) {
-      logService.error('Error recuperando sesión:', error);
-      return null;
-    }
-  }
+      logService.debug('Limpiando sesión');
+      
+      // Limpiar cookies
+      this.cookieService.remove('access_token');
+      this.cookieService.remove('refresh_token');
+      this.cookieService.remove('user');
 
-  hasStoredSession() {
-    return Boolean(localStorage.getItem(this.SESSION_KEY));
+      // Cerrar sesión en Supabase
+      await supabaseService.signOut();
+
+      logService.debug('Sesión limpiada correctamente');
+    } catch (error) {
+      logService.error('Error limpiando sesión:', error);
+      throw error;
+    }
   }
 
   isSessionValid() {
     try {
-      const session = this.getSession();
-      if (!session) return false;
-
-      const accessToken = cookieService.getAccessToken();
-      if (!accessToken) return false;
-
-      // Verificar si el token está expirado
-      const [, payload] = accessToken.split('.');
-      const decodedPayload = JSON.parse(atob(payload));
-      const currentTime = Math.floor(Date.now() / 1000);
-
-      return decodedPayload.exp > currentTime;
+      const accessToken = this.cookieService.get('access_token');
+      return !!accessToken;
     } catch (error) {
-      logService.error('Error validando sesión:', error);
+      logService.error('Error verificando sesión:', error);
       return false;
     }
   }
 
-  startActivityTimer() {
-    logService.debug('Iniciando timer de actividad');
-    if (this.activityTimer) {
-      clearTimeout(this.activityTimer);
-    }
-    this.activityTimer = setTimeout(() => {
-      logService.debug('Timer de inactividad expirado');
-      this.endSession();
-    }, this.ACTIVITY_TIMEOUT);
-  }
-
-  async refreshSessionTokens() {
+  getSession() {
     try {
-      const refreshToken = cookieService.getRefreshToken();
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
+      const accessToken = this.cookieService.get('access_token');
+      const refreshToken = this.cookieService.get('refresh_token');
+      const userStr = this.cookieService.get('user');
+
+      if (!accessToken) {
+        return null;
       }
 
-      const { accessToken, refreshToken: newRefreshToken } = 
-        await authService.refreshTokens(refreshToken);
-
-      cookieService.setAccessToken(accessToken);
-      cookieService.setRefreshToken(newRefreshToken);
-
-      logService.debug('Tokens actualizados');
-      return { accessToken, refreshToken: newRefreshToken };
+      return {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        user: userStr ? JSON.parse(userStr) : null
+      };
     } catch (error) {
-      logService.error('Error refreshing tokens:', error);
-      await this.clearSession();
-      throw error;
-    }
-  }
-
-  setLastAttemptedRoute(route) {
-    try {
-      sessionStorage.setItem(this.LAST_ROUTE_KEY, route);
-    } catch (error) {
-      logService.error('Error guardando última ruta:', error);
-    }
-  }
-
-  getLastAttemptedRoute() {
-    try {
-      return sessionStorage.getItem(this.LAST_ROUTE_KEY);
-    } catch (error) {
-      logService.error('Error recuperando última ruta:', error);
+      logService.error('Error obteniendo sesión:', error);
       return null;
     }
   }
 
-  clearLastAttemptedRoute() {
+  async refreshSession() {
     try {
-      sessionStorage.removeItem(this.LAST_ROUTE_KEY);
-    } catch (error) {
-      logService.error('Error limpiando última ruta:', error);
-    }
-  }
-
-  async endSession() {
-    try {
-      if (this.activityTimer) {
-        clearTimeout(this.activityTimer);
-        this.activityTimer = null;
-      }
-
-      const refreshToken = cookieService.getRefreshToken();
-      if (refreshToken) {
-        try {
-          await authService.revokeToken(refreshToken);
-        } catch (revokeError) {
-          logService.debug('Error al revocar token, continuando con limpieza:', revokeError);
-        }
+      logService.debug('Refrescando sesión');
+      const session = await supabaseService.refreshSession();
+      
+      if (session) {
+        await this.setSession(session);
+        logService.debug('Sesión refrescada correctamente');
+        return session;
       }
       
-      await this.clearSession();
-      logService.debug('Sesión finalizada');
+      return null;
     } catch (error) {
-      logService.error('Error durante el cierre de sesión:', error);
-      // Intentar limpiar la sesión incluso si hay errores
-      await this.clearSession();
+      logService.error('Error refrescando sesión:', error);
       throw error;
     }
-  }
-
-  async clearSession() {
-    const clearOperations = [
-      {
-        operation: () => localStorage.removeItem(this.SESSION_KEY),
-        name: 'localStorage'
-      },
-      {
-        operation: () => cookieService.clearTokens(),
-        name: 'tokens'
-      },
-      {
-        operation: () => cookieService.clearUser(),
-        name: 'user data'
-      },
-      {
-        operation: () => this.clearLastAttemptedRoute(),
-        name: 'last route'
-      }
-    ];
-
-    const errors = [];
-
-    for (const { operation, name } of clearOperations) {
-      try {
-        await operation();
-        logService.debug(`Limpieza exitosa: ${name}`);
-      } catch (error) {
-        logService.error(`Error limpiando ${name}:`, error);
-        errors.push({ name, error });
-      }
-    }
-
-    if (errors.length > 0) {
-      logService.error('Errores durante la limpieza de sesión:', errors);
-      throw new Error('Error durante la limpieza de sesión');
-    }
-
-    logService.debug('Sesión limpiada completamente');
   }
 }
 

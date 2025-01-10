@@ -16,6 +16,7 @@ import Spinner from './components/Spinner';
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const EmailConfirmation = lazy(() => import('./pages/EmailConfirmation'));
 
 // Dashboard pages
 const Chat = lazy(() => import('./pages/dashboard/Chat'));
@@ -67,6 +68,14 @@ const router = createHashRouter(
           element={
             <Suspense fallback={<Spinner size="lg" center />}>
               <Register />
+            </Suspense>
+          }
+        />
+        <Route
+          path="confirm-email"
+          element={
+            <Suspense fallback={<Spinner size="lg" center />}>
+              <EmailConfirmation />
             </Suspense>
           }
         />

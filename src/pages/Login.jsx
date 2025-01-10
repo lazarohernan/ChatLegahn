@@ -8,9 +8,10 @@ import LoadingButton from '../components/LoadingButton';
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, resetPassword } = useAuth();
   const { showError } = useError();
   const [loading, setLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -30,11 +31,30 @@ const Login = () => {
       showError('El correo electrónico es requerido', 'validation');
       return false;
     }
-    if (!formData.password) {
+    if (!formData.password && !isResetting) {
       showError('La contraseña es requerida', 'validation');
       return false;
     }
     return true;
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!formData.email) {
+      showError('Ingresa tu correo electrónico para restablecer la contraseña', 'validation');
+      return;
+    }
+
+    try {
+      setIsResetting(true);
+      await resetPassword(formData.email);
+      showError('Se ha enviado un enlace para restablecer tu contraseña', 'success');
+    } catch (error) {
+      console.error('Reset password error:', error);
+      showError(error.message || 'Error al enviar el correo de restablecimiento', 'error');
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -45,17 +65,24 @@ const Login = () => {
       setLoading(true);
       const userData = await login(formData.email, formData.password);
       
-      // Asegurarnos de que el usuario está autenticado antes de redirigir
       if (userData) {
-        // Pequeño delay para asegurar que el estado de autenticación se ha actualizado
-        setTimeout(() => {
-          const from = location.state?.from?.pathname || '/dashboard';
-          navigate(from, { replace: true });
-        }, 100);
+        const from = location.state?.from?.pathname || '/dashboard';
+        navigate(from, { replace: true });
       }
     } catch (error) {
       console.error('Login error:', error);
-      showError(error.message || 'Error al iniciar sesión', 'error');
+      let errorMessage = 'Error al iniciar sesión';
+      
+      // Manejar errores específicos de Supabase
+      if (error.message.includes('Invalid login credentials')) {
+        errorMessage = 'Credenciales inválidas';
+      } else if (error.message.includes('Email not confirmed')) {
+        errorMessage = 'Por favor confirma tu correo electrónico';
+      } else if (error.message.includes('Too many requests')) {
+        errorMessage = 'Demasiados intentos. Por favor espera unos minutos';
+      }
+      
+      showError(errorMessage, 'error');
     } finally {
       setLoading(false);
     }
@@ -139,23 +166,28 @@ const Login = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        name="remember"
-                        type="checkbox"
-                        checked={formData.remember}
-                        onChange={handleChange}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
+                    <input
+                      id="remember-me"
+                      name="remember"
+                      type="checkbox"
+                      checked={formData.remember}
+                      onChange={handleChange}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
                     <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                       Recordarme
                     </label>
                   </div>
 
                   <div className="text-sm">
-                    <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                      ¿Olvidaste tu contraseña?
-                    </a>
+                    <button
+                      type="button"
+                      onClick={handleResetPassword}
+                      disabled={isResetting}
+                      className="font-medium text-blue-600 hover:text-blue-500"
+                    >
+                      {isResetting ? 'Enviando...' : '¿Olvidaste tu contraseña?'}
+                    </button>
                   </div>
                 </div>
 
