@@ -1,80 +1,46 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './',
-  server: {
-    port: 3000,
-    host: true,
-    headers: {
-      'Access-Control-Allow-Credentials': 'true',
-    }
-  },
-  preview: {
-    port: 3000
-  },
   build: {
-    sourcemap: true,
+    outDir: 'dist',
     rollupOptions: {
       input: {
-        main: './index.html',
+        main: resolve(__dirname, 'index.html'),
       },
-      external: [
-        '@heroicons/react/24/outline',
-        '@heroicons/react/24/solid'
-      ],
       output: {
-        manualChunks: (id) => {
-          // Crear chunks para las dependencias principales
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            }
-            if (id.includes('@heroicons') || id.includes('@headlessui')) {
-              return 'ui-vendor';
-            }
-            if (id.includes('recharts') || id.includes('d3')) {
-              return 'chart-vendor';
-            }
-            return 'vendor';
-          }
-        },
-        // Asegurar que los chunks tengan nombres consistentes
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'auth': ['@supabase/supabase-js'],
+          'ui': ['lucide-react', 'tailwindcss']
+        }
       }
     },
+    sourcemap: true,
+    // Asegurar que los módulos de node no causen problemas
     commonjsOptions: {
-      include: [/node_modules/],
-      extensions: ['.js', '.jsx']
+      transformMixedEsModules: true,
     }
   },
   resolve: {
     alias: {
-      '@': '/src',
-      '@heroicons/react/24/outline': '@heroicons/react/24/outline/index.js',
-      '@heroicons/react/24/solid': '@heroicons/react/24/solid/index.js'
+      '@': resolve(__dirname, './src'),
     },
-    dedupe: ['react', 'react-dom', 'react-router-dom']
   },
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      '@heroicons/react/24/outline',
-      '@heroicons/react/24/solid',
-      '@headlessui/react',
-      'recharts',
-      '@supabase/supabase-js'
-    ],
-    exclude: []
+  server: {
+    port: 3000,
+    host: true
   },
-  esbuild: {
-    jsxInject: `import React from 'react'`,
-    target: 'es2020'
+  // Configuración específica para producción
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(import.meta.env.NODE_ENV || 'production'),
+    'process.env.VITE_NODE_ENV': JSON.stringify(import.meta.env.VITE_NODE_ENV || 'production')
   }
 });
