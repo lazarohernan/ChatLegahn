@@ -16,43 +16,66 @@ export default defineConfig(({ mode }) => ({
         main: resolve(__dirname, 'index.html'),
       },
       output: {
-        manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'auth': ['@supabase/supabase-js'],
-          'ui': ['lucide-react', 'tailwindcss'],
-          'datepicker': ['react-datepicker']
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-datepicker')) {
+              return 'datepicker';
+            }
+            if (id.includes('react')) {
+              return 'vendor';
+            }
+            if (id.includes('@supabase')) {
+              return 'auth';
+            }
+            if (id.includes('lucide-react') || id.includes('tailwindcss')) {
+              return 'ui';
+            }
+          }
         }
-      },
-      external: []
+      }
     },
     sourcemap: true,
-    // Asegurar que los módulos de node no causen problemas
     commonjsOptions: {
       transformMixedEsModules: true,
       include: [
         /node_modules\/react-datepicker/,
-        /node_modules\/@popperjs/
+        /node_modules\/@popperjs/,
+        /node_modules\/classnames/
       ]
     }
   },
   css: {
-    modules: {
-      localsConvention: 'camelCase'
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "react-datepicker/dist/react-datepicker.css";`
+      }
     }
   },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-    },
+      '@components': resolve(__dirname, './src/components'),
+      '@pages': resolve(__dirname, './src/pages'),
+      '@services': resolve(__dirname, './src/services'),
+      '@utils': resolve(__dirname, './src/utils'),
+      '@hooks': resolve(__dirname, './src/hooks'),
+      '@context': resolve(__dirname, './src/context'),
+      '@assets': resolve(__dirname, './src/assets'),
+      '@config': resolve(__dirname, './src/config')
+    }
   },
   optimizeDeps: {
-    include: ['react-datepicker']
+    include: [
+      'react-datepicker',
+      '@popperjs/core',
+      'classnames'
+    ],
+    exclude: []
   },
   server: {
     port: 3000,
     host: true
   },
-  // Configuración específica para producción
   define: {
     'import.meta.env.MODE': JSON.stringify(mode),
     'import.meta.env.VITE_NODE_ENV': JSON.stringify(mode)

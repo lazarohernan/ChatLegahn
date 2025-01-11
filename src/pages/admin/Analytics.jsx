@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '@context/ThemeContext';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -14,6 +13,9 @@ import {
   Download,
   ChevronDown
 } from 'lucide-react';
+
+// Importar estilos directamente
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Analytics = () => {
   const { isDarkMode } = useTheme();
