@@ -50,6 +50,7 @@ npm run dev
 - Vite 6
 - Tailwind CSS
 - React Router 6
+- Supabase
 - Axios
 - Vitest
 - Testing Library
@@ -107,6 +108,71 @@ El proyecto está configurado para despliegue automático en Vercel:
 2. Configura las variables de entorno
 3. El despliegue se realizará automáticamente con cada push a main
 
+## ✨ Características
+
+- 🔐 Autenticación y autorización con Supabase
+- 🌓 Tema claro/oscuro
+- 📱 Diseño responsive
+- 🔍 Búsqueda avanzada
+- 📊 Dashboard analítico
+- 🔔 Sistema de notificaciones
+- 📝 Editor de documentos
+- 🔄 Sincronización en tiempo real
+- 📈 Monitoreo y métricas
+- 🎯 Tour guiado para nuevos usuarios
+
+## 🚧 Mejoras Pendientes
+
+### Optimizaciones
+- Implementar React.memo en componentes de renderizado frecuente
+- Optimizar re-renders en NotificationsDrawer
+- Mejorar la carga diferida de componentes admin
+- Reducir el tamaño del bundle principal
+- Implementar cache de consultas frecuentes
+
+### Seguridad
+- Implementar rate limiting en endpoints sensibles
+- Agregar validación de tipos con TypeScript
+- Mejorar el manejo de tokens expirados
+- Implementar refresh token silencioso
+- Fortalecer validaciones en formularios
+
+### UX/UI
+- Corregir parpadeo en tema oscuro al cargar
+- Mejorar accesibilidad en modales
+- Ajustar contraste en tema oscuro
+- Optimizar responsive design en tablets
+- Agregar indicadores de carga más granulares
+
+### Testing
+- Aumentar cobertura de pruebas unitarias
+- Implementar pruebas e2e con Cypress
+- Agregar pruebas de integración para AuthContext
+- Mejorar mocks en pruebas de servicios
+- Implementar pruebas de rendimiento
+
+## ⚠️ Problemas Conocidos
+
+### Gestión de Estado
+- Pérdida ocasional de estado en navegación profunda
+- Inconsistencias en cache de notificaciones
+- Problemas con estado global en logout
+
+### Rendimiento
+- Carga lenta de dashboard en datos grandes
+- Memory leaks en componentes de monitoreo
+- Re-renders innecesarios en sidebar
+
+### UI/UX
+- Flash of unstyled content en carga inicial
+- Problemas de scroll en modales móviles
+- Inconsistencias en animaciones de transición
+
+### Seguridad
+- Manejo subóptimo de sesiones concurrentes
+- Validaciones incompletas en inputs
+- Exposición de información en logs
+
 ## 🤝 Contribuir
 
 1. Fork el proyecto
@@ -118,16 +184,3 @@ El proyecto está configurado para despliegue automático en Vercel:
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles
-
-## ✨ Características
-
-- 🔐 Autenticación y autorización
-- 🌓 Tema claro/oscuro
-- 📱 Diseño responsive
-- 🔍 Búsqueda avanzada
-- 📊 Dashboard analítico
-- 🔔 Sistema de notificaciones
-- 📝 Editor de documentos
-- 🔄 Sincronización en tiempo real
-- 📈 Monitoreo y métricas
-- 🎯 Tour guiado para nuevos usuarios

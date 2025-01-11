@@ -4,10 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="LegalAI Chat - Tu asistente legal inteligente" />
     <title>LegalAI Chat</title>
   </head>
   <body class="min-h-screen bg-white dark:bg-gray-900">
     <div id="root" class="min-h-screen"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" crossorigin="anonymous"></script>
+    <script>
+      // Fallback para navegadores que no soportan módulos ES
+      if (!('noModule' in HTMLScriptElement.prototype)) {
+        const script = document.createElement('script');
+        script.src = '/src/main-legacy.js';
+        document.body.appendChild(script);
+      }
+    </script>
   </body>
 </html>

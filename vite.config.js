@@ -23,5 +23,14 @@ export default defineConfig({
         }
       }
     }
+  },
+  optimizeDeps: {
+    include: ['@supabase/supabase-js']
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom']
+  },
+  esbuild: {
+    jsxInject: `import React from 'react'`
   }
 });
