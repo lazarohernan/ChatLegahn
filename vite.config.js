@@ -19,20 +19,34 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           'vendor': ['react', 'react-dom', 'react-router-dom'],
           'auth': ['@supabase/supabase-js'],
-          'ui': ['lucide-react', 'tailwindcss']
+          'ui': ['lucide-react', 'tailwindcss'],
+          'datepicker': ['react-datepicker']
         }
-      }
+      },
+      external: []
     },
     sourcemap: true,
     // Asegurar que los módulos de node no causen problemas
     commonjsOptions: {
       transformMixedEsModules: true,
+      include: [
+        /node_modules\/react-datepicker/,
+        /node_modules\/@popperjs/
+      ]
+    }
+  },
+  css: {
+    modules: {
+      localsConvention: 'camelCase'
     }
   },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
     },
+  },
+  optimizeDeps: {
+    include: ['react-datepicker']
   },
   server: {
     port: 3000,
