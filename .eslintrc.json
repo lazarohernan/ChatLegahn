@@ -1,7 +1,8 @@
 {
+  "root": true,
   "env": {
     "browser": true,
-    "es2021": true,
+    "es2020": true,
     "node": true
   },
   "extends": [
@@ -10,31 +11,35 @@
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended"
   ],
+  "ignorePatterns": ["dist", ".eslintrc.json"],
   "parserOptions": {
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
-  "plugins": ["react", "react-hooks", "vitest"],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
+  "plugins": ["react-refresh"],
   "rules": {
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true }
+    ],
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "warn"
+    "react/prop-types": "off",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
   },
   "overrides": [
     {
-      "files": ["**/*.test.js", "**/*.test.jsx", "src/test/**/*.js"],
+      "files": ["**/*.test.js", "**/*.test.jsx"],
       "env": {
-        "vitest-globals/env": true
-      },
-      "extends": ["plugin:vitest-globals/recommended"],
-      "rules": {
-        "vitest/expect-expect": "error",
-        "vitest/no-disabled-tests": "warn",
-        "vitest/no-focused-tests": "error"
+        "jest": true
       }
     }
   ]

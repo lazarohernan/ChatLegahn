@@ -1,5 +1,5 @@
 import { useTheme } from '../../context/ThemeContext';
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { Download } from 'lucide-react';
 
 const Tools = () => {
   const { isDarkMode } = useTheme();
@@ -84,7 +84,7 @@ const Tools = () => {
                     : 'text-primary hover:text-primary-dark'
                 } transition-colors`}
               >
-                <ArrowDownTrayIcon className="w-5 h-5" />
+                <Download className="w-5 h-5" />
                 Descargar PDF
               </button>
             </div>

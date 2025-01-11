@@ -1,5 +1,5 @@
 import { useTheme } from '../../context/ThemeContext';
-import { PlayCircleIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { PlayCircle, Calendar } from 'lucide-react';
 
 const Zoom = () => {
   const { isDarkMode } = useTheme();
@@ -97,7 +97,7 @@ const Zoom = () => {
                   isDarkMode ? 'text-dark-secondary' : 'text-gray-500'
                 }`}>
                   <div className="flex items-center">
-                    <CalendarIcon className="w-4 h-4 mr-1" />
+                    <Calendar className="w-4 h-4 mr-1" />
                     {session.date}
                   </div>
                   <span>{session.duration}</span>
@@ -114,7 +114,7 @@ const Zoom = () => {
                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   }`}
                 >
-                  <PlayCircleIcon className="w-5 h-5" />
+                  <PlayCircle className="w-5 h-5" />
                   {session.recording ? 'Ver Grabación' : 'Próximamente'}
                 </button>
               </div>

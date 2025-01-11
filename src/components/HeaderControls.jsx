@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useWalkthrough } from '../context/hooks/useWalkthrough';
-import { MoonIcon, SunIcon, BellIcon } from '@heroicons/react/24/outline';
+import { Moon, Sun, Bell } from 'lucide-react';
 import NotificationsDrawer from './NotificationsDrawer';
 import { getThemeClass, lightTheme, darkTheme } from '../config/theme';
 
@@ -67,9 +67,9 @@ const HeaderControls = () => {
           onClick={toggleTheme}
         >
           {isDarkMode ? (
-            <SunIcon className="w-5 h-5" />
+            <Sun className="w-5 h-5" />
           ) : (
-            <MoonIcon className="w-5 h-5" />
+            <Moon className="w-5 h-5" />
           )}
         </button>
 
@@ -82,7 +82,7 @@ const HeaderControls = () => {
               darkTheme.iconButton
             )}`}
           >
-            <BellIcon className="w-5 h-5" />
+            <Bell className="w-5 h-5" />
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           {showNotifications && (

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { XMarkIcon, ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { X, AlertTriangle, XCircle, CheckCircle } from 'lucide-react';
 
 const ErrorNotification = ({
   message,
@@ -23,21 +23,21 @@ const ErrorNotification = ({
       error: {
         bgColor: 'bg-red-50',
         textColor: 'text-red-800',
-        icon: XCircleIcon,
+        icon: XCircle,
         iconColor: 'text-red-400',
         testId: 'error-icon'
       },
       warning: {
         bgColor: 'bg-yellow-50',
         textColor: 'text-yellow-800',
-        icon: ExclamationTriangleIcon,
+        icon: AlertTriangle,
         iconColor: 'text-yellow-400',
         testId: 'warning-icon'
       },
       success: {
         bgColor: 'bg-green-50',
         textColor: 'text-green-800',
-        icon: CheckCircleIcon,
+        icon: CheckCircle,
         iconColor: 'text-green-400',
         testId: 'success-icon'
       }
@@ -89,7 +89,7 @@ const ErrorNotification = ({
               data-testid="close-button"
             >
               <span className="sr-only">Cerrar</span>
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>

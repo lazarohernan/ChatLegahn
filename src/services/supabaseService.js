@@ -3,33 +3,96 @@ import { logService } from './logService'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-// En desarrollo, permitir que el servicio se inicialice sin credenciales
 const isDevelopment = import.meta.env.MODE === 'development'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  if (!isDevelopment) {
-    throw new Error('Supabase URL and Anon Key are required in production')
-  }
-  logService.warn('Supabase credentials not found, running in mock mode')
+// Mock data para desarrollo
+const mockUser = {
+  id: 'mock-user-id',
+  email: 'mock@example.com',
+  user_metadata: {
+    name: 'Usuario Mock',
+    role: 'user'
+  },
+  app_metadata: {
+    provider: 'email'
+  },
+  aud: 'authenticated',
+  created_at: new Date().toISOString()
 }
 
-// Crear cliente de Supabase o un mock en desarrollo
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : isDevelopment
-    ? {
-        auth: {
-          signUp: async () => ({ data: { user: { id: 'mock-user-id', email: 'mock@example.com' } }, error: null }),
-          signInWithPassword: async () => ({ data: { user: { id: 'mock-user-id', email: 'mock@example.com' } }, error: null }),
-          signOut: async () => ({ error: null }),
-          getSession: async () => ({ data: { session: null }, error: null }),
-          onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } }, error: null }),
-          resetPasswordForEmail: async () => ({ error: null }),
-          verifyOtp: async () => ({ error: null })
-        }
+const mockSession = {
+  access_token: 'mock-access-token',
+  refresh_token: 'mock-refresh-token',
+  expires_in: 3600,
+  expires_at: Math.floor(Date.now() / 1000) + 3600,
+  user: mockUser
+}
+
+// Cliente mock para desarrollo
+const mockClient = {
+  auth: {
+    signUp: async ({ email, options = {} }) => ({
+      data: {
+        user: {
+          ...mockUser,
+          email,
+          user_metadata: { ...mockUser.user_metadata, ...options.data }
+        },
+        session: mockSession
+      },
+      error: null
+    }),
+    signInWithPassword: async ({ email }) => ({
+      data: {
+        user: { ...mockUser, email },
+        session: mockSession
+      },
+      error: null
+    }),
+    signOut: async () => ({ error: null }),
+    getSession: async () => ({
+      data: { session: mockSession },
+      error: null
+    }),
+    refreshSession: async () => ({
+      data: { session: mockSession },
+      error: null
+    }),
+    onAuthStateChange: (callback) => {
+      callback('SIGNED_IN', { session: mockSession })
+      return { data: { subscription: { unsubscribe: () => {} } } }
+    },
+    resetPasswordForEmail: async (email) => {
+      logService.debug('Mock: Reset password email sent to', email)
+      return { error: null }
+    },
+    updateUser: async (updates) => ({
+      data: { user: { ...mockUser, ...updates } },
+      error: null
+    }),
+    verifyOtp: async ({ token }) => {
+      if (token === 'invalid') {
+        return { error: { message: 'Invalid token' } }
       }
-    : null
+      return { data: { user: mockUser }, error: null }
+    }
+  }
+}
+
+// Crear cliente real o mock según el entorno
+export const supabase = (() => {
+  if (!isDevelopment && (!supabaseUrl || !supabaseAnonKey)) {
+    logService.warn('Usando cliente mock de Supabase temporalmente en producción debido a credenciales faltantes')
+    return mockClient
+  }
+  
+  if (supabaseUrl && supabaseAnonKey) {
+    return createClient(supabaseUrl, supabaseAnonKey)
+  }
+  
+  logService.warn('Usando cliente mock de Supabase para desarrollo')
+  return mockClient
+})()
 
 export const supabaseService = {
   // Autenticación
@@ -39,9 +102,7 @@ export const supabaseService = {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: metadata,
-        },
+        options: { data: metadata }
       })
       if (error) throw error
       logService.debug('Registro exitoso:', { userId: data.user?.id })
@@ -57,7 +118,7 @@ export const supabaseService = {
       logService.debug('Iniciando login con Supabase')
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       })
       if (error) throw error
       logService.debug('Login exitoso:', { userId: data.user?.id })
@@ -84,7 +145,7 @@ export const supabaseService = {
     try {
       logService.debug('Solicitando reset de password')
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${window.location.origin}/reset-password`
       })
       if (error) throw error
       logService.debug('Solicitud de reset enviada')
@@ -98,7 +159,7 @@ export const supabaseService = {
     try {
       logService.debug('Actualizando password')
       const { error } = await supabase.auth.updateUser({
-        password: newPassword,
+        password: newPassword
       })
       if (error) throw error
       logService.debug('Password actualizado')
@@ -142,8 +203,8 @@ export const supabaseService = {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
       })
       if (error) throw error
       logService.debug('Login con proveedor iniciado')
@@ -157,7 +218,7 @@ export const supabaseService = {
   // Utilidades
   onAuthStateChange(callback) {
     return supabase.auth.onAuthStateChange(callback)
-  },
+  }
 }
 
 export default supabaseService

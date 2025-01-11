@@ -1,4 +1,4 @@
-import { StarIcon, ChartBarIcon, UserIcon } from '@heroicons/react/24/solid';
+import { Star, BarChart2, User } from 'lucide-react';
 
 const Ratings = () => {
   // Datos de ejemplo
@@ -40,11 +40,12 @@ const Ratings = () => {
 
   const renderStars = (rating) => {
     return [...Array(5)].map((_, index) => (
-      <StarIcon
+      <Star
         key={index}
         className={`h-5 w-5 ${
           index < rating ? 'text-yellow-400' : 'text-gray-300'
         }`}
+        fill={index < rating ? 'currentColor' : 'none'}
       />
     ));
   };
@@ -62,7 +63,7 @@ const Ratings = () => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Calificación General</h2>
-            <StarIcon className="h-8 w-8 text-yellow-400" />
+            <Star className="h-8 w-8 text-yellow-400" fill="currentColor" />
           </div>
           <div className="text-4xl font-bold mb-2">{overallStats.averageRating}</div>
           <div className="text-gray-600">de 5 estrellas</div>
@@ -74,7 +75,7 @@ const Ratings = () => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Distribución</h2>
-            <ChartBarIcon className="h-8 w-8 text-blue-500" />
+            <BarChart2 className="h-8 w-8 text-blue-500" />
           </div>
           <div className="space-y-3">
             {Object.entries(overallStats.ratingDistribution)
@@ -101,7 +102,7 @@ const Ratings = () => {
         <div className="bg-white p-6 rounded-xl shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Usuarios Activos</h2>
-            <UserIcon className="h-8 w-8 text-green-500" />
+            <User className="h-8 w-8 text-green-500" />
           </div>
           <div className="text-4xl font-bold mb-2">89%</div>
           <div className="text-gray-600">tasa de participación</div>

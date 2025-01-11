@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '../context/ThemeContext';
 import { getThemeClass, lightTheme, darkTheme } from '../config/theme';
 import LoadingButton from './LoadingButton';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { X } from 'lucide-react';
 
 const LogoutModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
   const { isDarkMode } = useTheme();
@@ -35,7 +35,7 @@ const LogoutModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
               onClick={onClose}
             >
               <span className="sr-only">Cerrar</span>
-              <XMarkIcon className="h-6 w-6" />
+              <X className="h-6 w-6" />
             </button>
           </div>
 

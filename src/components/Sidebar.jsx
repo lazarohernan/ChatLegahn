@@ -6,16 +6,16 @@ import { useAuth } from '../hooks/useAuth';
 import { useError } from '../context/ErrorContext';
 import { useNavigation } from '../hooks/useNavigation';
 import { 
-  ChatBubbleLeftRightIcon,
-  ClockIcon,
-  DocumentTextIcon,
-  VideoCameraIcon,
-  Cog6ToothIcon,
-  ArrowLeftOnRectangleIcon,
-  ExclamationTriangleIcon,
-  ChevronLeftIcon,
-  BookOpenIcon
-} from '@heroicons/react/24/outline';
+  MessageSquare,
+  Clock,
+  FileText,
+  Video,
+  Settings,
+  LogOut,
+  AlertTriangle,
+  ChevronLeft,
+  BookOpen
+} from 'lucide-react';
 import ReportProblemModal from './ReportProblemModal';
 import LogoutModal from './LogoutModal';
 import { getThemeClass, lightTheme, darkTheme } from '../config/theme';
@@ -33,12 +33,12 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menuItems = useMemo(() => [
-    { id: 'chat', name: 'Chat', icon: ChatBubbleLeftRightIcon, path: '/dashboard/chat', className: 'chat-section' },
-    { id: 'history', name: 'Historial', icon: ClockIcon, path: '/dashboard/history', className: 'history-section' },
-    { id: 'tools', name: 'Herramientas', icon: DocumentTextIcon, path: '/dashboard/tools', className: 'tools-section' },
-    { id: 'zoom', name: 'Sesiones Zoom', icon: VideoCameraIcon, path: '/dashboard/zoom', className: 'zoom-section' },
-    { id: 'docs', name: 'Documentación', icon: BookOpenIcon, path: '/dashboard/docs', className: 'docs-section' },
-    { id: 'settings', name: 'Configuración', icon: Cog6ToothIcon, path: '/dashboard/settings', className: 'settings-section' },
+    { id: 'chat', name: 'Chat', icon: MessageSquare, path: '/dashboard/chat', className: 'chat-section' },
+    { id: 'history', name: 'Historial', icon: Clock, path: '/dashboard/history', className: 'history-section' },
+    { id: 'tools', name: 'Herramientas', icon: FileText, path: '/dashboard/tools', className: 'tools-section' },
+    { id: 'zoom', name: 'Sesiones Zoom', icon: Video, path: '/dashboard/zoom', className: 'zoom-section' },
+    { id: 'docs', name: 'Documentación', icon: BookOpen, path: '/dashboard/docs', className: 'docs-section' },
+    { id: 'settings', name: 'Configuración', icon: Settings, path: '/dashboard/settings', className: 'settings-section' },
   ], []);
 
   const handleCollapse = useCallback(() => {
@@ -91,7 +91,7 @@ const Sidebar = () => {
           )
         }`}
       >
-        <ChevronLeftIcon className={`w-4 h-4 transition-transform ${isCollapsed ? 'rotate-180' : ''} ${
+        <ChevronLeft className={`w-4 h-4 transition-transform ${isCollapsed ? 'rotate-180' : ''} ${
           getThemeClass(isDarkMode, lightTheme.textTertiary, darkTheme.textTertiary)
         }`} />
       </button>
@@ -134,7 +134,7 @@ const Sidebar = () => {
             )
           }`}
         >
-          <ArrowLeftOnRectangleIcon className="w-5 h-5 flex-shrink-0" />
+          <LogOut className="w-5 h-5 flex-shrink-0" />
           <span className={`transition-opacity duration-200 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
             {!isCollapsed && 'Cerrar Sesión'}
           </span>
@@ -155,7 +155,7 @@ const Sidebar = () => {
             )
           }`}
         >
-          <ExclamationTriangleIcon className="w-4 h-4 flex-shrink-0" />
+          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
           <span className={`transition-opacity duration-200 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
             {!isCollapsed && 'Reportar Problema'}
           </span>

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useTheme } from '../context/ThemeContext';
-import { XMarkIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { X, Check, Trash } from 'lucide-react';
 import { getThemeClass, lightTheme, darkTheme } from '../config/theme';
 
 const NotificationsDrawer = ({ onClose, onMarkAllRead }) => {
@@ -69,7 +69,7 @@ const NotificationsDrawer = ({ onClose, onMarkAllRead }) => {
                 darkTheme.iconButton
               )}
             >
-              <XMarkIcon className="w-5 h-5" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -111,7 +111,7 @@ const NotificationsDrawer = ({ onClose, onMarkAllRead }) => {
                 </div>
                 {notification.unread && (
                   <button className="text-blue-500 hover:text-blue-600">
-                    <CheckIcon className="w-5 h-5" />
+                    <Check className="w-5 h-5" />
                   </button>
                 )}
               </div>
@@ -132,7 +132,7 @@ const NotificationsDrawer = ({ onClose, onMarkAllRead }) => {
               darkTheme.iconButton
             )}`}
           >
-            <TrashIcon className="w-4 h-4" />
+            <Trash className="w-4 h-4" />
             Borrar todas las notificaciones
           </button>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { Send } from 'lucide-react';
 
 const Chat = () => {
   const { isDarkMode } = useTheme();
@@ -58,7 +58,7 @@ const Chat = () => {
               } transition-colors`}
               disabled={!message.trim()}
             >
-              <PaperAirplaneIcon className="w-6 h-6" />
+              <Send className="w-6 h-6" />
             </button>
           </form>
           <p className={`text-xs mt-2 text-center ${

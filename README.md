@@ -1,186 +1,232 @@
-# LegalAI Chat
+# LegalAI Chat 🤖⚖️
 
-Aplicación de chat legal con IA, construida con React, Vite y Tailwind CSS.
+Sistema de chat inteligente especializado en consultas legales, construido con React y potenciado por IA.
 
-## 🚀 Inicio Rápido
+## 🚀 Características Principales
 
-### Prerrequisitos
+- 💬 Chat legal inteligente con respuestas instantáneas
+- 📄 Generación asistida de documentos legales
+- 🌓 Tema claro/oscuro
+- 🔒 Sistema de autenticación seguro
+- 📱 Diseño responsive
+- ⚡ Optimización de rendimiento
+- 🔍 Sistema de búsqueda avanzado
+- 📊 Panel de administración
+- 🎯 Tour guiado para nuevos usuarios
 
-- Node.js (v18 o superior)
-- npm (v9 o superior)
+## 🛠️ Tecnologías
 
-### Instalación
+### Frontend
+- React 18
+- Vite
+- TailwindCSS
+- React Router v6
+- Recharts
+- Intro.js
+- Lucide Icons
+- HeadlessUI
 
-1. Clonar el repositorio
+### Backend & Auth
+- Supabase
+- JWT
+- Axios
+
+### Testing
+- Vitest
+- Testing Library
+- Jest DOM
+- User Event Testing
+
+### Utilidades
+- Class Variance Authority
+- Tailwind Merge
+- CLSX
+- PropTypes
+
+## 📋 Requisitos Previos
+
+- Node.js >= 18
+- npm >= 9
+
+## 🔧 Instalación
+
+1. Clonar el repositorio:
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/[tu-usuario]/lawyer-ai-chat.git
 cd lawyer-ai-chat
 ```
 
-2. Instalar dependencias
+2. Instalar dependencias:
 ```bash
 npm install
 ```
 
-3. Configurar variables de entorno
+3. Configurar variables de entorno:
 ```bash
-cp .env.example .env.local
+cp .env.example .env.development
 ```
-Editar `.env.local` con tus valores
 
-4. Iniciar servidor de desarrollo
+4. Iniciar en modo desarrollo:
 ```bash
 npm run dev
 ```
 
-## 🛠️ Scripts Disponibles
+## 📦 Scripts Disponibles
 
-- `npm run dev` - Inicia servidor de desarrollo
-- `npm run build` - Construye para producción
-- `npm run preview` - Vista previa de build
-- `npm run lint` - Ejecuta ESLint
-- `npm test` - Ejecuta tests
-- `npm run test:watch` - Tests en modo watch
-- `npm run test:coverage` - Reporte de cobertura
-- `npm run test:ci` - Tests para CI
+### Desarrollo
+- `npm run dev`: Inicia el entorno de desarrollo
+- `npm run build`: Construye la aplicación para producción
+- `npm run preview`: Vista previa de la versión de producción
+- `npm run lint`: Ejecuta ESLint
 
-## 📚 Stack Tecnológico
+### Testing
+- `npm run test`: Ejecuta las pruebas una vez
+- `npm run test:watch`: Ejecuta las pruebas en modo watch
+- `npm run test:ui`: Abre la interfaz de usuario de Vitest
+- `npm run test:coverage`: Genera reporte de cobertura
+- `npm run test:ci`: Ejecuta pruebas para CI
 
-- React 18
-- Vite 6
-- Tailwind CSS
-- React Router 6
-- Supabase
-- Axios
-- Vitest
-- Testing Library
-- Heroicons
-- Recharts
+### Utilidades
+- `./diagnose.sh`: Diagnostica problemas comunes
+- `./clean.sh`: Limpia el proyecto
+- `./fix-common.sh`: Resuelve problemas comunes
+
+## 👥 Usuarios de Prueba
+
+### Usuario Normal
+- Email: demo@example.com
+- Password: Demo1234!
+- Role: user
+
+### Usuario Admin
+- Email: admin@example.com
+- Password: Admin1234!
+- Role: admin
 
 ## 🏗️ Estructura del Proyecto
 
 ```
 src/
-├── assets/         # Recursos estáticos
-├── components/     # Componentes React
+├── assets/          # Recursos estáticos
+├── components/      # Componentes reutilizables
+│   ├── __tests__/  # Tests de componentes
+│   └── monitoring/ # Componentes de monitoreo
 ├── config/         # Configuraciones
-├── context/        # Contextos React
-├── hooks/          # Custom hooks
-├── layouts/        # Layouts de página
-├── pages/          # Componentes de página
-├── services/       # Servicios y API
-├── tests/          # Tests
+├── context/        # Contextos de React
+│   └── hooks/     # Hooks de contexto
+├── hooks/          # Hooks personalizados
+│   └── __tests__/ # Tests de hooks
+├── layouts/        # Layouts de la aplicación
+├── pages/          # Páginas/Rutas
+│   ├── admin/     # Panel de administración
+│   └── dashboard/ # Dashboard principal
+├── services/       # Servicios y APIs
+├── tests/          # Tests de integración
 └── utils/          # Utilidades
 ```
 
-## 🔒 Variables de Entorno
+## 🔐 Seguridad
 
-Requeridas para desarrollo:
+- Autenticación JWT
+- Protección CSRF
+- Validación de sesiones
+- Auditoría de eventos
+- Headers de seguridad
+- Rate limiting
+- Cookies seguras
+- Validación de tokens
 
-```env
-VITE_APP_NAME=LegalAI Chat
-VITE_APP_URL=http://localhost:3000
-VITE_API_URL=http://localhost:3000/api
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
-```
+## ⚡ Optimizaciones
+
+- Lazy loading de componentes
+- Code splitting
+- Memoización de componentes
+- Optimización de re-renders
+- Caching de assets
+- Compresión de respuestas
+- PostCSS optimizations
+- Tailwind optimizations
 
 ## 🧪 Testing
 
-Tests unitarios y de integración con Vitest y Testing Library:
+- Tests unitarios con Vitest
+- Tests de integración
+- Tests de componentes
+- Testing Library
+- Cobertura > 80%
+- UI Testing
+- Event Testing
+- CI Testing
 
-```bash
-# Ejecutar todos los tests
-npm test
+## 🔄 Modo Desarrollo
 
-# Modo watch
-npm run test:watch
+El sistema puede funcionar en dos modos:
 
-# Cobertura
-npm run test:coverage
+### Con Supabase
+1. Configura las credenciales en `.env.development`:
+```env
+VITE_SUPABASE_URL=tu-url
+VITE_SUPABASE_ANON_KEY=tu-key
 ```
 
-## 📦 Despliegue
+### Sin Supabase (Mock)
+- Autenticación simulada
+- Datos de prueba
+- Perfecto para desarrollo sin backend
 
-El proyecto está configurado para despliegue automático en Vercel:
+## 🐛 Solución de Problemas
 
-1. Conecta tu repositorio en Vercel
-2. Configura las variables de entorno
-3. El despliegue se realizará automáticamente con cada push a main
+1. Ejecuta el diagnóstico:
+```bash
+./diagnose.sh
+```
 
-## ✨ Características
+2. Problemas comunes:
+```bash
+./fix-common.sh
+```
 
-- 🔐 Autenticación y autorización con Supabase
-- 🌓 Tema claro/oscuro
-- 📱 Diseño responsive
-- 🔍 Búsqueda avanzada
-- 📊 Dashboard analítico
-- 🔔 Sistema de notificaciones
-- 📝 Editor de documentos
-- 🔄 Sincronización en tiempo real
-- 📈 Monitoreo y métricas
-- 🎯 Tour guiado para nuevos usuarios
+3. Limpieza del proyecto:
+```bash
+./clean.sh
+```
 
-## 🚧 Mejoras Pendientes
+## 📝 Notas de Desarrollo
 
-### Optimizaciones
-- Implementar React.memo en componentes de renderizado frecuente
-- Optimizar re-renders en NotificationsDrawer
-- Mejorar la carga diferida de componentes admin
-- Reducir el tamaño del bundle principal
-- Implementar cache de consultas frecuentes
-
-### Seguridad
-- Implementar rate limiting en endpoints sensibles
-- Agregar validación de tipos con TypeScript
-- Mejorar el manejo de tokens expirados
-- Implementar refresh token silencioso
-- Fortalecer validaciones en formularios
-
-### UX/UI
-- Corregir parpadeo en tema oscuro al cargar
-- Mejorar accesibilidad en modales
-- Ajustar contraste en tema oscuro
-- Optimizar responsive design en tablets
-- Agregar indicadores de carga más granulares
-
-### Testing
-- Aumentar cobertura de pruebas unitarias
-- Implementar pruebas e2e con Cypress
-- Agregar pruebas de integración para AuthContext
-- Mejorar mocks en pruebas de servicios
-- Implementar pruebas de rendimiento
-
-## ⚠️ Problemas Conocidos
-
-### Gestión de Estado
-- Pérdida ocasional de estado en navegación profunda
-- Inconsistencias en cache de notificaciones
-- Problemas con estado global en logout
-
-### Rendimiento
-- Carga lenta de dashboard en datos grandes
-- Memory leaks en componentes de monitoreo
-- Re-renders innecesarios en sidebar
-
-### UI/UX
-- Flash of unstyled content en carga inicial
-- Problemas de scroll en modales móviles
-- Inconsistencias en animaciones de transición
-
-### Seguridad
-- Manejo subóptimo de sesiones concurrentes
-- Validaciones incompletas en inputs
-- Exposición de información en logs
+- Los logs solo están activos en desarrollo
+- El almacenamiento es local en desarrollo
+- Las variables de entorno son configurables
+- Sistema de feedback visual consistente
+- ESLint configurado con reglas personalizadas
+- PostCSS con soporte para nesting
+- Autoprefixer habilitado
 
 ## 🤝 Contribuir
 
 1. Fork el proyecto
-2. Crea tu rama (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add: nueva característica'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
+2. Crea una rama (`git checkout -b feature/amazing`)
+3. Commit tus cambios (`git commit -m 'Add: amazing feature'`)
+4. Push a la rama (`git push origin feature/amazing`)
 5. Abre un Pull Request
+
+### Guías de Contribución
+- Seguir el estilo de código existente
+- Añadir tests para nueva funcionalidad
+- Actualizar la documentación
+- Verificar el linting (`npm run lint`)
+- Asegurar que los tests pasen (`npm run test`)
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles.
+
+## 📞 Soporte
+
+- Documentación: [docs/](docs/)
+- Issues: [GitHub Issues](https://github.com/[tu-usuario]/lawyer-ai-chat/issues)
+- Email: soporte@example.com
+
+## 🔄 Versión
+
+- Versión actual: 0.0.0
+- Requiere: Node.js >= 18

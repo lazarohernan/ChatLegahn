@@ -1,32 +1,32 @@
 import Navbar from '../components/Navbar';
 import { 
-  ChatBubbleLeftRightIcon, 
-  DocumentTextIcon, 
-  ClockIcon, 
-  ShieldCheckIcon
-} from '@heroicons/react/24/outline';
+  MessageSquare,
+  FileText,
+  Clock,
+  Shield
+} from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { getThemeClass } from '../config/theme';
 import { useNavigation } from '../hooks/useNavigation';
 
 const features = [
   {
-    icon: ChatBubbleLeftRightIcon,
+    icon: MessageSquare,
     title: 'Chat Legal Inteligente',
     description: 'Obtén respuestas instantáneas a tus consultas legales con nuestra IA especializada.'
   },
   {
-    icon: DocumentTextIcon,
+    icon: FileText,
     title: 'Generación de Documentos',
     description: 'Crea documentos legales personalizados con asistencia inteligente.'
   },
   {
-    icon: ClockIcon,
+    icon: Clock,
     title: 'Disponibilidad 24/7',
     description: 'Accede a asesoramiento legal en cualquier momento, desde cualquier lugar.'
   },
   {
-    icon: ShieldCheckIcon,
+    icon: Shield,
     title: 'Seguridad Garantizada',
     description: 'Tus datos están protegidos con los más altos estándares de seguridad.'
   }

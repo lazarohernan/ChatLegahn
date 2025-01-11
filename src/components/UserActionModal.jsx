@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useTheme } from '../context/ThemeContext';
 import { 
   Eye, 
@@ -10,12 +11,7 @@ import {
   Clock,
   Shield,
   Mail,
-  Calendar,
-  DollarSign,
   Building,
-  Phone,
-  MapPin,
-  Globe,
   MessageSquare,
   FileText,
   Settings,
@@ -342,6 +338,16 @@ const UserActionModal = ({ isOpen, onClose, user, onAction }) => {
       </div>
     </div>
   );
+};
+
+UserActionModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired
+  }),
+  onAction: PropTypes.func.isRequired
 };
 
 export default UserActionModal;

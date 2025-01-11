@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { X } from 'lucide-react';
 
 const ReportProblemModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -25,9 +27,7 @@ const ReportProblemModal = ({ isOpen, onClose }) => {
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-6 h-6" />
             </button>
           </div>
           
@@ -79,6 +79,11 @@ const ReportProblemModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
+};
+
+ReportProblemModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default ReportProblemModal;

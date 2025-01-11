@@ -1,5 +1,5 @@
 import { useTheme } from '../../context/ThemeContext';
-import { CalendarIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { Calendar, MessageSquare } from 'lucide-react';
 
 const History = () => {
   const { isDarkMode } = useTheme();
@@ -56,7 +56,7 @@ const History = () => {
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-3">
                   <div className="mt-1">
-                    <ChatBubbleLeftRightIcon className={`w-5 h-5 ${
+                    <MessageSquare className={`w-5 h-5 ${
                       isDarkMode ? 'text-dark-primary' : 'text-primary'
                     }`} />
                   </div>
@@ -76,7 +76,7 @@ const History = () => {
                 <div className={`flex items-center text-sm ${
                   isDarkMode ? 'text-dark-secondary' : 'text-gray-500'
                 }`}>
-                  <CalendarIcon className="w-4 h-4 mr-1" />
+                  <Calendar className="w-4 h-4 mr-1" />
                   <span>{chat.date}</span>
                   <span className="mx-1">•</span>
                   <span>{chat.time}</span>

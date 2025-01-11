@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { 
-  UserCircleIcon,
-  BellIcon,
-  ShieldCheckIcon,
-  KeyIcon
-} from '@heroicons/react/24/outline';
+  UserCircle,
+  Bell,
+  ShieldCheck,
+  Key
+} from 'lucide-react';
 
 const Settings = () => {
   const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
 
   const tabs = [
-    { id: 'profile', name: 'Perfil', icon: UserCircleIcon },
-    { id: 'notifications', name: 'Notificaciones', icon: BellIcon },
-    { id: 'privacy', name: 'Privacidad', icon: ShieldCheckIcon },
-    { id: 'security', name: 'Seguridad', icon: KeyIcon },
+    { id: 'profile', name: 'Perfil', icon: UserCircle },
+    { id: 'notifications', name: 'Notificaciones', icon: Bell },
+    { id: 'privacy', name: 'Privacidad', icon: ShieldCheck },
+    { id: 'security', name: 'Seguridad', icon: Key },
   ];
 
   return (
@@ -58,7 +58,7 @@ const Settings = () => {
                   <div className={`w-20 h-20 rounded-full flex items-center justify-center ${
                     isDarkMode ? 'bg-dark-hover' : 'bg-gray-200'
                   }`}>
-                    <UserCircleIcon className={`w-12 h-12 ${
+                    <UserCircle className={`w-12 h-12 ${
                       isDarkMode ? 'text-dark-secondary' : 'text-gray-400'
                     }`} />
                   </div>
