@@ -1,55 +1,27 @@
-import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigation } from '../hooks/useNavigation';
-import { sessionService } from '../services/sessionService';
-import { logService } from '../services/logService';
+import Spinner from './Spinner';
 
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const { navigateWithTransition } = useNavigation();
+  const { isAuthenticated, isLoading, isInitialized } = useAuth();
 
-  useEffect(() => {
-    const handleAuthenticatedUser = () => {
-      try {
-        // Solo redirigir si no estamos en la página principal
-        if (window.location.hash !== '#/') {
-          const lastAttemptedRoute = sessionService.getLastAttemptedRoute();
-          
-          if (lastAttemptedRoute) {
-            sessionService.clearLastAttemptedRoute();
-            navigateWithTransition(lastAttemptedRoute, { replace: true });
-            logService.debug('Redirigiendo a última ruta:', lastAttemptedRoute);
-          } else {
-            navigateWithTransition('/dashboard/chat', { replace: true });
-            logService.debug('Redirigiendo a dashboard por defecto');
-          }
-        }
-      } catch (error) {
-        logService.error('Error en redirección de ruta pública:', error);
-        navigateWithTransition('/dashboard/chat', { replace: true });
-      }
-    };
-
-    // Solo proceder si no está cargando y está autenticado
-    if (!isLoading && isAuthenticated) {
-      handleAuthenticatedUser();
-    }
-  }, [isAuthenticated, isLoading, navigateWithTransition]);
-
-  // Mostrar nada mientras se verifica la autenticación
-  if (isLoading) {
-    return null;
+  // Mostrar spinner mientras se inicializa la autenticación
+  if (!isInitialized || isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" center />
+      </div>
+    );
   }
 
-  // Si no está autenticado, mostrar la ruta pública
-  if (!isAuthenticated) {
-    return children;
+  // Redirigir a dashboard si está autenticado
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
   }
 
-  // Si está autenticado, no mostrar nada
-  // (la redirección se maneja en el useEffect)
-  return null;
+  // Renderizar contenido para usuarios no autenticados
+  return children;
 };
 
 PublicRoute.propTypes = {

@@ -6,36 +6,55 @@ import supabaseService from '../services/supabaseService';
 
 export const AuthContext = createContext(null);
 
+const INITIAL_STATE = {
+  isAuthenticated: false,
+  user: null,
+  isLoading: true,
+  isInitialized: false
+};
+
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [state, setState] = useState(INITIAL_STATE);
+
+  // Función para actualizar el estado de forma segura
+  const updateState = useCallback((updates) => {
+    setState(prev => ({ ...prev, ...updates }));
+  }, []);
 
   // Función para inicializar la autenticación
   const initAuth = useCallback(async () => {
+    if (state.isInitialized) return;
+
     try {
       logService.debug('Iniciando autenticación...');
       const session = await supabaseService.getSession();
       
       if (session) {
-        setUser(session.user);
-        setIsAuthenticated(true);
-        logService.debug('Sesión restaurada para usuario:', session.user.id);
+        updateState({
+          user: session.user,
+          isAuthenticated: true,
+          isLoading: false,
+          isInitialized: true
+        });
         await sessionService.setSession(session);
       } else {
-        logService.debug('No hay sesión válida');
-        await sessionService.clearSession();
-        setUser(null);
-        setIsAuthenticated(false);
+        updateState({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          isInitialized: true
+        });
       }
     } catch (error) {
       logService.error('Error en initAuth:', error);
-      setUser(null);
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
+      updateState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        isInitialized: true
+      });
     }
-  }, []);
+  }, [state.isInitialized, updateState]);
 
   // Efecto para inicializar la autenticación
   useEffect(() => {
@@ -44,119 +63,81 @@ export const AuthProvider = ({ children }) => {
 
   // Efecto para manejar cambios en el estado de autenticación
   useEffect(() => {
+    if (!state.isInitialized) return;
+
     const { data: { subscription } } = supabaseService.onAuthStateChange(async (event, session) => {
       logService.debug('Cambio en estado de autenticación:', event);
       
-      if (event === 'SIGNED_IN') {
-        setUser(session.user);
-        setIsAuthenticated(true);
-        await sessionService.setSession(session);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setIsAuthenticated(false);
-        await sessionService.clearSession();
-      } else if (event === 'TOKEN_REFRESHED') {
-        setUser(session.user);
-        await sessionService.setSession(session);
+      switch (event) {
+        case 'SIGNED_IN':
+          updateState({
+            user: session?.user || null,
+            isAuthenticated: true,
+            isLoading: false
+          });
+          if (session) await sessionService.setSession(session);
+          break;
+
+        case 'SIGNED_OUT':
+          updateState({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false
+          });
+          await sessionService.clearSession();
+          break;
+
+        case 'TOKEN_REFRESHED':
+          if (session) {
+            updateState({ user: session.user });
+            await sessionService.setSession(session);
+          }
+          break;
+
+        default:
+          break;
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [state.isInitialized, updateState]);
 
-  // Funciones de autenticación
   const signIn = async (credentials) => {
     try {
-      setIsLoading(true);
+      updateState({ isLoading: true });
       const data = await supabaseService.signIn(credentials);
-      setUser(data.user);
-      setIsAuthenticated(true);
       return data;
     } catch (error) {
       logService.error('Error en signIn:', error);
       throw error;
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const signUp = async (credentials) => {
-    try {
-      setIsLoading(true);
-      const data = await supabaseService.signUp(credentials);
-      return data;
-    } catch (error) {
-      logService.error('Error en signUp:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      updateState({ isLoading: false });
     }
   };
 
   const signOut = async () => {
     try {
-      setIsLoading(true);
+      updateState({ isLoading: true });
       await supabaseService.signOut();
-      setUser(null);
-      setIsAuthenticated(false);
-      await sessionService.clearSession();
     } catch (error) {
       logService.error('Error en signOut:', error);
       throw error;
     } finally {
-      setIsLoading(false);
+      updateState({ isLoading: false });
     }
   };
 
-  const resetPassword = async (email) => {
-    try {
-      setIsLoading(true);
-      await supabaseService.resetPassword(email);
-    } catch (error) {
-      logService.error('Error en resetPassword:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updatePassword = async (newPassword) => {
-    try {
-      setIsLoading(true);
-      await supabaseService.updatePassword(newPassword);
-    } catch (error) {
-      logService.error('Error en updatePassword:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const signInWithProvider = async (provider) => {
-    try {
-      setIsLoading(true);
-      const data = await supabaseService.signInWithProvider(provider);
-      return data;
-    } catch (error) {
-      logService.error('Error en signInWithProvider:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Solo renderizar cuando la autenticación esté inicializada
+  if (!state.isInitialized) {
+    return null;
+  }
 
   const contextValue = {
-    isAuthenticated,
-    user,
-    isLoading,
+    ...state,
     signIn,
-    signUp,
     signOut,
-    resetPassword,
-    updatePassword,
-    signInWithProvider,
     initAuth
   };
 
