@@ -19,25 +19,18 @@ class SessionService {
       }
 
       // Guardar token de acceso
-      this.cookieService.set('access_token', session.access_token, {
-        secure: true,
-        sameSite: 'strict'
-      });
+      if (session.access_token) {
+        this.cookieService.setAccessToken(session.access_token);
+      }
 
       // Guardar refresh token si existe
       if (session.refresh_token) {
-        this.cookieService.set('refresh_token', session.refresh_token, {
-          secure: true,
-          sameSite: 'strict'
-        });
+        this.cookieService.setRefreshToken(session.refresh_token);
       }
 
       // Guardar datos de usuario
       if (session.user) {
-        this.cookieService.set('user', JSON.stringify(session.user), {
-          secure: true,
-          sameSite: 'strict'
-        });
+        this.cookieService.setUser(session.user);
       }
 
       logService.debug('Sesión guardada correctamente');
@@ -51,10 +44,8 @@ class SessionService {
     try {
       logService.debug('Limpiando sesión');
       
-      // Limpiar cookies
-      this.cookieService.remove('access_token');
-      this.cookieService.remove('refresh_token');
-      this.cookieService.remove('user');
+      // Limpiar todas las cookies
+      this.cookieService.clearAll();
 
       // Cerrar sesión en Supabase
       await supabaseService.signOut();
@@ -68,7 +59,7 @@ class SessionService {
 
   isSessionValid() {
     try {
-      const accessToken = this.cookieService.get('access_token');
+      const accessToken = this.cookieService.getAccessToken();
       return !!accessToken;
     } catch (error) {
       logService.error('Error verificando sesión:', error);
@@ -78,9 +69,9 @@ class SessionService {
 
   getSession() {
     try {
-      const accessToken = this.cookieService.get('access_token');
-      const refreshToken = this.cookieService.get('refresh_token');
-      const userStr = this.cookieService.get('user');
+      const accessToken = this.cookieService.getAccessToken();
+      const refreshToken = this.cookieService.getRefreshToken();
+      const user = this.cookieService.getUser();
 
       if (!accessToken) {
         return null;
@@ -89,7 +80,7 @@ class SessionService {
       return {
         access_token: accessToken,
         refresh_token: refreshToken,
-        user: userStr ? JSON.parse(userStr) : null
+        user: user
       };
     } catch (error) {
       logService.error('Error obteniendo sesión:', error);
