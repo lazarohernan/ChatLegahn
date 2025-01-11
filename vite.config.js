@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   build: {
     outDir: 'dist',
@@ -40,7 +40,7 @@ export default defineConfig({
   },
   // Configuración específica para producción
   define: {
-    'process.env.NODE_ENV': JSON.stringify(import.meta.env.NODE_ENV || 'production'),
-    'process.env.VITE_NODE_ENV': JSON.stringify(import.meta.env.VITE_NODE_ENV || 'production')
+    'import.meta.env.MODE': JSON.stringify(mode),
+    'import.meta.env.VITE_NODE_ENV': JSON.stringify(mode)
   }
-});
+}));
