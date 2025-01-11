@@ -7,77 +7,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-      },
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react-datepicker')) {
-              return 'datepicker';
-            }
-            if (id.includes('react')) {
-              return 'vendor';
-            }
-            if (id.includes('@supabase')) {
-              return 'auth';
-            }
-            if (id.includes('lucide-react') || id.includes('tailwindcss')) {
-              return 'ui';
-            }
-          }
-        }
-      }
-    },
     sourcemap: true,
     commonjsOptions: {
-      transformMixedEsModules: true,
-      include: [
-        /node_modules\/react-datepicker/,
-        /node_modules\/@popperjs/,
-        /node_modules\/classnames/
-      ]
-    }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "react-datepicker/dist/react-datepicker.css";`
-      }
+      include: [/node_modules/],
+      transformMixedEsModules: true
     }
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@components': resolve(__dirname, './src/components'),
-      '@pages': resolve(__dirname, './src/pages'),
-      '@services': resolve(__dirname, './src/services'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@hooks': resolve(__dirname, './src/hooks'),
-      '@context': resolve(__dirname, './src/context'),
-      '@assets': resolve(__dirname, './src/assets'),
-      '@config': resolve(__dirname, './src/config')
+      '@': resolve(__dirname, './src')
     }
   },
   optimizeDeps: {
-    include: [
-      'react-datepicker',
-      '@popperjs/core',
-      'classnames'
-    ],
-    exclude: []
+    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js']
   },
   server: {
     port: 3000,
     host: true
-  },
-  define: {
-    'import.meta.env.MODE': JSON.stringify(mode),
-    'import.meta.env.VITE_NODE_ENV': JSON.stringify(mode)
   }
-}));
+});
