@@ -2,14 +2,21 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logService } from '../services/logService';
 import { sessionService } from '../services/sessionService';
+import { useNavigationState } from '../context/NavigationContext';
 
 export const useNavigation = () => {
   const navigate = useNavigate();
+  const { updatePath } = useNavigationState();
+
+  const getCurrentHashPath = () => {
+    const hash = window.location.hash;
+    return hash ? hash.slice(1) : '/';
+  };
 
   const navigateWithTransition = useCallback((to, options = {}) => {
     try {
       // Guardar la ruta actual antes de navegar
-      const currentPath = window.location.hash.slice(1) || '/';
+      const currentPath = getCurrentHashPath();
       sessionService.setLastAttemptedRoute(currentPath);
 
       // Asegurar que las rutas empiecen con /
@@ -31,6 +38,9 @@ export const useNavigation = () => {
         }
       }
 
+      // Actualizar el path en el contexto
+      updatePath(path);
+
       // Navegar con las opciones especificadas
       navigate(path, {
         replace: finalOptions.replace
@@ -43,7 +53,7 @@ export const useNavigation = () => {
       // En caso de error, intentar navegar al dashboard
       navigate('/dashboard/chat', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, updatePath]);
 
   const goBack = useCallback(() => {
     try {
@@ -62,7 +72,8 @@ export const useNavigation = () => {
 
   return {
     navigateWithTransition,
-    goBack
+    goBack,
+    getCurrentPath: getCurrentHashPath
   };
 };
 

@@ -17,6 +17,8 @@ const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const EmailConfirmation = lazy(() => import('./pages/EmailConfirmation'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 
 // Dashboard pages
 const Chat = lazy(() => import('./pages/dashboard/Chat'));
@@ -25,6 +27,8 @@ const Tools = lazy(() => import('./pages/dashboard/Tools'));
 const Zoom = lazy(() => import('./pages/dashboard/Zoom'));
 const Docs = lazy(() => import('./pages/dashboard/Docs'));
 const Settings = lazy(() => import('./pages/dashboard/Settings'));
+const Profile = lazy(() => import('./pages/dashboard/Profile'));
+const Subscription = lazy(() => import('./pages/dashboard/Subscription'));
 
 // Admin pages
 const Analytics = lazy(() => import('./pages/admin/Analytics'));
@@ -79,6 +83,22 @@ const router = createHashRouter(
             </Suspense>
           }
         />
+        <Route
+          path="reset-password"
+          element={
+            <Suspense fallback={<Spinner size="lg" center />}>
+              <ResetPassword />
+            </Suspense>
+          }
+        />
+        <Route
+          path="verify-email"
+          element={
+            <Suspense fallback={<Spinner size="lg" center />}>
+              <VerifyEmail />
+            </Suspense>
+          }
+        />
       </Route>
 
       {/* Rutas protegidas */}
@@ -126,7 +146,7 @@ const router = createHashRouter(
             }
           />
           <Route
-            path="docs"
+            path="docs/*"
             element={
               <Suspense fallback={<Spinner size="lg" center />}>
                 <Docs />
@@ -138,6 +158,22 @@ const router = createHashRouter(
             element={
               <Suspense fallback={<Spinner size="lg" center />}>
                 <Settings />
+              </Suspense>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <Suspense fallback={<Spinner size="lg" center />}>
+                <Profile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="subscription"
+            element={
+              <Suspense fallback={<Spinner size="lg" center />}>
+                <Subscription />
               </Suspense>
             }
           />
@@ -180,7 +216,7 @@ const router = createHashRouter(
             }
           />
           <Route
-            path="documents"
+            path="documents/*"
             element={
               <Suspense fallback={<Spinner size="lg" center />}>
                 <Documents />

@@ -1,11 +1,18 @@
-import { createContext, useContext, useReducer, useCallback } from 'react';
+import { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { logService } from '../services/logService';
 
 const NavigationContext = createContext();
 
+// Helper para obtener la ruta actual del hash
+const getCurrentHashPath = () => {
+  const hash = window.location.hash;
+  return hash ? hash.slice(1) : '/';
+};
+
 const initialState = {
   history: {},
-  currentPath: window.location.pathname
+  currentPath: getCurrentHashPath()
 };
 
 const navigationReducer = (state, action) => {
@@ -36,20 +43,52 @@ const navigationReducer = (state, action) => {
 export const NavigationProvider = ({ children }) => {
   const [state, dispatch] = useReducer(navigationReducer, initialState);
 
+  // Escuchar cambios en el hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const newPath = getCurrentHashPath();
+      dispatch({ type: 'UPDATE_PATH', path: newPath });
+      logService.debug('Hash changed:', newPath);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   const saveState = useCallback((path, pageState) => {
-    dispatch({ type: 'SAVE_STATE', path, state: pageState });
+    try {
+      dispatch({ type: 'SAVE_STATE', path, state: pageState });
+      logService.debug('State saved for path:', path);
+    } catch (error) {
+      logService.error('Error saving state:', error);
+    }
   }, []);
 
   const updatePath = useCallback((path) => {
-    dispatch({ type: 'UPDATE_PATH', path });
+    try {
+      dispatch({ type: 'UPDATE_PATH', path });
+      logService.debug('Path updated:', path);
+    } catch (error) {
+      logService.error('Error updating path:', error);
+    }
   }, []);
 
   const clearHistory = useCallback(() => {
-    dispatch({ type: 'CLEAR_HISTORY' });
+    try {
+      dispatch({ type: 'CLEAR_HISTORY' });
+      logService.debug('Navigation history cleared');
+    } catch (error) {
+      logService.error('Error clearing history:', error);
+    }
   }, []);
 
   const getState = useCallback((path) => {
-    return state.history[path] || null;
+    try {
+      return state.history[path] || null;
+    } catch (error) {
+      logService.error('Error getting state for path:', path, error);
+      return null;
+    }
   }, [state.history]);
 
   return (
