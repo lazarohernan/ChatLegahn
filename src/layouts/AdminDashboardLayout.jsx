@@ -9,7 +9,7 @@ const AdminDashboardLayout = () => {
 
   return (
     <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'
+      isDarkMode ? 'bg-dark-primary text-dark-primary' : 'bg-gray-50 text-gray-900'
     }`}>
       <AdminSidebar 
         isCollapsed={isSidebarCollapsed} 
@@ -18,8 +18,10 @@ const AdminDashboardLayout = () => {
       
       <main className={`transition-all duration-300 ${
         isSidebarCollapsed ? 'ml-20' : 'ml-64'
-      }`}>
-        <div className="container mx-auto px-6 py-8">
+      } ${isDarkMode ? 'bg-dark-primary' : 'bg-gray-50'}`}>
+        <div className={`container mx-auto px-6 py-8 ${
+          isDarkMode ? 'bg-dark-secondary rounded-lg shadow-lg' : 'bg-white rounded-lg shadow-sm'
+        }`}>
           <Outlet />
         </div>
       </main>

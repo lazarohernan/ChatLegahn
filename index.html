@@ -7,8 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="description" content="LegalAI Chat - Tu asistente legal inteligente" />
     <title>LegalAI Chat</title>
+    <script>
+      // Aplicar tema oscuro inmediatamente si está guardado
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
-  <body class="min-h-screen bg-white dark:bg-gray-900">
+  <body class="min-h-screen bg-white text-gray-900 dark:bg-dark-primary dark:text-dark-primary">
     <div id="root" class="min-h-screen"></div>
     <script type="module" src="/src/main.jsx" crossorigin="anonymous"></script>
     <script>
