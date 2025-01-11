@@ -6,6 +6,10 @@ import { dirname, resolve } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const findAvailablePort = (startPort) => {
+  return startPort;
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -31,10 +35,21 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js']
+    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js'],
+    force: true
   },
   server: {
-    port: 3000,
+    port: findAvailablePort(3008),
+    strictPort: false,
+    host: true,
+    open: true
+  },
+  preview: {
+    port: findAvailablePort(3008),
+    strictPort: false,
     host: true
+  },
+  esbuild: {
+    jsxInject: `import React from 'react'`
   }
 });

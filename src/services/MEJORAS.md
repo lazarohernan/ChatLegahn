@@ -12,6 +12,16 @@
 - [x] Diseño responsive
 - [x] Navegación con transiciones
 
+### Navegación
+- [x] Sistema de navegación con Context/Provider
+- [x] Hook personalizado useNavigation
+- [x] Historial de navegación
+- [x] Integración con React Router v6
+- [x] Soporte para rutas protegidas
+- [x] Control de estados de navegación
+- [x] Redirecciones inteligentes
+- [x] Gestión de rutas anidadas
+
 ### Seguridad
 - [x] Validación de tokens JWT
 - [x] Protección CSRF
@@ -51,6 +61,16 @@
 - [ ] Accesibilidad (ARIA)
 - [ ] Soporte para múltiples idiomas
 - [ ] Personalización de temas
+
+### Navegación
+- [ ] Transiciones animadas entre rutas
+- [ ] Sistema de breadcrumbs automático
+- [ ] Navegación por gestos en móviles
+- [ ] Historial persistente
+- [ ] Rutas favoritas
+- [ ] Precarga de rutas frecuentes
+- [ ] Análisis de patrones de navegación
+- [ ] Atajos de teclado para navegación
 
 ### Seguridad
 - [ ] Two-factor authentication

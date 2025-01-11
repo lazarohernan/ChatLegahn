@@ -57,17 +57,27 @@ export const supabaseService = {
       });
       if (error) throw error;
     },
+
+    onAuthStateChange: (callback) => {
+      return supabase.auth.onAuthStateChange((event, session) => {
+        callback(event, session);
+      });
+    }
   },
 
   user: {
-    getCurrent: () => {
-      return supabase.auth.getUser();
+    getCurrent: async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      return user;
     },
 
-    getSession: () => {
-      return supabase.auth.getSession();
-    },
-  },
+    getSession: async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      return session;
+    }
+  }
 };
 
 export default supabase;

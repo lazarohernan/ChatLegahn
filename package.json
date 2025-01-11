@@ -4,14 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0 <20.0.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3007",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "clean": "rm -rf node_modules package-lock.json && npm cache clean --force",
+    "setup": "npm run clean && npm install"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",
